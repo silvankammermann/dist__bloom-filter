@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{enumitem}
+
+\title{Bloom Filter}
+\author{Silvan Kammermann}
+\date{10. Dezember 2023}
+
+\begin{document}
+
+    \maketitle
+
+    \section{Einführung}
+    Der Bloom-Filter nimmt kleine Ungenauigkeiten in Kauf, um Rechenleistung und Speicherplatz einzusparen. Gegeben sei eine Menge $M$ mit $n$ elementen. Die herkömmliche Methode, zu prüfen, ob ein Element $x$ in der Menge $M$ vorkommt, wäre, jedes Element aus $M$ mit $x$ zu vergleichen, bis die Elemente gleich sind, oder alle Elemente geprüft wurden. Bei grossen Mengen ist dieses Vorgehen sehr aufwändig.
+
+    Mit dem Bloom-Filter wird initial ein Bit-Array mit allen Elementen $= 0$ der Länge $m$ erstellt. Nun werden die Elemente aus $M$ mit $k$ Hash-Funktionen gehashed. Die ganzzahligen Ergebnisse der Hash-Funktionen ensprechen nun den Positionen im Bit-Array. Der Wert an jenen Positionen wird $= 1$ gesetzt.
+
+    Um nun zu überprüfen, ob ein Element $x$ in der Menge vorkommt, wird dieses wieder mit denselben Hash-Funktionen gehashed. Die Positionen im Bit-Array, welche durch die Hash-Funktionen ermittelt werden, werden überprüft. Wenn an allen Positionen der Wert $1$ gespeichert ist, wird $x$ als Element von $M$ eingestuft. Es kann sein, dass $x \notin M$, es jedoch trotzdem als Element von $M$ klassifiziert wird. Diese Ungenauigkeit wird in Kauf genommen, denn ein Element, welches in $M$ vorkommt, wird immer als solches Klassifiziert. Die ungenauigkeit kann nur bei Elementen vorkommen, welche nicht in $M$ enthalten sind.
+
+
+    \subsection{Vorteile}
+    - Benötigt weniger Zeit \\
+    - Benötigt weniger Speicher \\
+    - Vorhandene Elemente werden immer erkannt \\
+
+    \subsection{Nachteile}
+    - Nicht vorhandene Elemente werden zum Teil als vorhanden erkannt \\
+    - Elemente aus $M$ können nicht enfernt werden \\
+    - Grösse des Bit-Arrays ist abhängig von der Anzahl zu erwartenden Elementen \\
+
+    \section{Anwendung}
+    Das klassische Beispiel des Bloom-Filters ist eine Liste mit unsicheren Webseiten. Bevor der Browser eine Webseite öffnet, wird geprüft, ob diese in der Liste der unsicheren Seiten ist. Diese Prüfung muss schnell und sicher funktionieren. Somit ist es in Ordnund, wenn der Browser eine sichere Seite in seltenen Fällen als unsicher einstuft. Denn eine Seite, welche auf der Liste ist, wird immer als unsicher eingestuft.
+    Eine weitere Anwendung ist die Live Prüfung von Nutzernamen während der Registrierung bei einem Online-Dienst. Wenn man einen Nutzernamen eingibt, wird geprüft, ob dieser bereits vergeben ist. Bei einer Plattform mit mehreren Millionen Nutzern, dauert ein Loop über alle Nutzernamen schlicht zu lange.
+
+    \section{Testing}
+    Der JUnit test befindet sich im Ordner test. Ich habe auf einen Screenshot verzichtet, da der Test nichts spannendes ausgibt. Zuerst werden die Wörter aus der Datei eingelesen. Danach wird eine zufällige Fehlerwahrscheinlichkeit zwischen 1 und 0 generiert. Dann werden 10000 nicht enthaltene Wörter durch den Filter gelassen und es wird getestet, ob die Fehlerwahrscheinlichkeit + 0.1 nicht überschritten wurde. Zum Schluss wird für jedes Enthaltene Word getestet, ob dieses vom Filter als enthalten Klassifiziert wird.
+
+\end{document}
