@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  echo:
     runs-on: ubuntu-latest
     steps: 
       - run: echo "hello world"
